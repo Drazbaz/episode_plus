@@ -1,3 +1,4 @@
 class ScreenRoutes {
-  static const home = '/';
+  static const homeScreen = '/';
+  static const seriesFormScreen = '/seriesFormScreen';
 }

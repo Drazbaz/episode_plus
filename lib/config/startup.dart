@@ -1,4 +1,6 @@
 import 'package:episode_plus/config/screen_routes.dart';
+import 'package:episode_plus/screens/home_screen.dart';
+import 'package:episode_plus/screens/series_form_screen.dart';
 import 'package:flutter/material.dart';
 
 class EpisodePlus extends StatelessWidget {
@@ -19,11 +21,12 @@ class EpisodePlus extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
       initialRoute: '/',
       routes: {
-        //ScreenRoutes.home: (context) =>
+        ScreenRoutes.homeScreen: (context) => const HomeScreen(),
+        ScreenRoutes.seriesFormScreen: (context) => const SeriesFormScreen()
       },
     );
   }
