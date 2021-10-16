@@ -1,5 +1,7 @@
+import 'package:episode_plus/config/screen_routes.dart';
 import 'package:episode_plus/config/screen_titles.dart';
-import 'package:episode_plus/data/repository/series_repository.dart';
+import 'package:episode_plus/data/context.dart';
+import 'package:episode_plus/data/models/series_model.dart';
 import 'package:flutter/material.dart';
 
 class SeriesFormScreen extends StatelessWidget {
@@ -10,6 +12,7 @@ class SeriesFormScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(ScreenTitles.seriesFormScreenTitle),
+          automaticallyImplyLeading: false,
         ),
         body: SeriesForm(key),
       ),
@@ -44,12 +47,42 @@ class _SeriesFormState extends State<SeriesForm> {
   Widget _currentEpisodeField() => TextFormField(
         validator: (String? inputValue) {
           if (inputValue == null || inputValue.isEmpty) {
-            return 'Please enter Series Name.';
+            return 'Please enter Current Series.';
+          } else if (inputValue == '0') {
+            return 'Please enter an integer greater than zero.';
           }
           return null;
         },
         onSaved: (String? inputValue) {
-          _currentEpisode = int.tryParse(inputValue!)!;
+          int parsedInputValue = int.tryParse(inputValue!)!;
+          _currentEpisode = parsedInputValue;
+        },
+      );
+
+  Widget _formSubmitButton() => ElevatedButton(
+        child: const Text('Submit'),
+        onPressed: () async {
+          if (!_formKey.currentState!.validate()) {
+            return;
+          }
+
+          _formKey.currentState!.save();
+          await Context.instance.addSeries(
+            Series(name: _name, currentEpisode: _currentEpisode),
+          );
+
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Series Added Successfully!')));
+
+          Navigator.pushReplacementNamed(context, ScreenRoutes.homeScreen);
+          //Navigator.pushNamed(context, ScreenRoutes.homeScreen);
+        },
+      );
+
+  Widget _formCancelButton() => ElevatedButton(
+        child: const Text('Cancel'),
+        onPressed: () {
+          Navigator.pushReplacementNamed(context, ScreenRoutes.homeScreen);
         },
       );
 
@@ -59,28 +92,11 @@ class _SeriesFormState extends State<SeriesForm> {
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           _nameField(),
           _currentEpisodeField(),
-          Center(
-            child: ElevatedButton(
-              child: const Text('Submit'),
-              onPressed: () async {
-                if (!_formKey.currentState!.validate()) {
-                  return;
-                }
-
-                _formKey.currentState!.save();
-
-                await Series.addSeries(
-                  Series(name: _name, currentEpisode: _currentEpisode),
-                );
-
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('Series Added Successfully!')));
-              },
-            ),
-          )
+          _formSubmitButton(),
+          _formCancelButton(),
         ],
       ),
     );

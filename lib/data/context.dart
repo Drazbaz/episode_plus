@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'package:episode_plus/config/database_tables.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+
+import 'models/series_model.dart';
 
 class Context {
   Context._privateConstructor();
@@ -29,5 +32,27 @@ class Context {
       currentEpisode INTEGER
     )
     ''');
+  }
+
+  // Gets a list of all Series in database.
+  Future<List<Series>> getSeries() async {
+    Database db = await instance.database;
+    var series = await db.query(DatabaseTables.seriesTable, orderBy: 'name');
+    List<Series> seriesList =
+        series.isNotEmpty ? series.map((s) => Series.fromMap(s)).toList() : [];
+    return seriesList;
+  }
+
+  // Creates a new Series in database.
+  Future<int> addSeries(Series series) async {
+    Database db = await instance.database;
+    return await db.insert(DatabaseTables.seriesTable, series.toMap());
+  }
+
+  // Removes a Series from the database.
+  Future<int> deleteSeries(int id) async {
+    Database db = await instance.database;
+    return await db
+        .delete(DatabaseTables.seriesTable, where: 'id = ?', whereArgs: [id]);
   }
 }
