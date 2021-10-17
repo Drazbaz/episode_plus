@@ -33,6 +33,9 @@ class _SeriesFormState extends State<SeriesForm> {
   final _formKey = GlobalKey<FormState>();
 
   Widget _nameField() => TextFormField(
+        decoration: const InputDecoration(
+          labelText: 'Series Name:',
+        ),
         validator: (String? inputValue) {
           if (inputValue == null || inputValue.isEmpty) {
             return 'Please enter Series Name.';
@@ -49,6 +52,9 @@ class _SeriesFormState extends State<SeriesForm> {
   }
 
   Widget _currentEpisodeField() => TextFormField(
+        decoration: const InputDecoration(
+          labelText: 'Current Episode:',
+        ),
         validator: (String? inputValue) {
           if (inputValue == null || inputValue.isEmpty) {
             return 'Please enter Current Episode.';
@@ -80,29 +86,41 @@ class _SeriesFormState extends State<SeriesForm> {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('$_name Added!')));
 
-          Navigator.pushReplacementNamed(context, ScreenRoutes.homeScreen);
+          Navigator.popAndPushNamed(context, ScreenRoutes.homeScreen);
         },
       );
 
   Widget _formCancelButton() => ElevatedButton(
         child: const Text('Cancel'),
         onPressed: () {
-          Navigator.pushReplacementNamed(context, ScreenRoutes.homeScreen);
+          Navigator.popAndPushNamed(context, ScreenRoutes.homeScreen);
         },
       );
 
+  Widget _formButtonRow() => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _formCancelButton(),
+            _formSubmitButton(),
+          ],
+        ),
+      );
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _nameField(),
-          _currentEpisodeField(),
-          _formSubmitButton(),
-          _formCancelButton(),
-        ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _nameField(),
+            _currentEpisodeField(),
+            _formButtonRow(),
+          ],
+        ),
       ),
     );
   }

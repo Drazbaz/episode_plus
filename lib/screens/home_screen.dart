@@ -54,44 +54,53 @@ class _HomeScreenListState extends State<HomeScreenList> {
     return _currentEpisode;
   }
 
-  Widget _listItem(Series series) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Expanded(
-            child: Column(
+  Widget _listItem(Series series) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  Text('Series: ${series.name}'),
+                  Text('Current Episode: ${series.currentEpisode}'),
+                ],
+              ),
+            ),
+            Row(
               children: [
-                Text(series.name),
-                Text('Current Episode: ${series.currentEpisode}')
+                IconButton(
+                  icon: const Icon(
+                    Icons.add_circle_outline,
+                    color: Colors.green,
+                  ),
+                  onPressed: () async {
+                    int _followingEpisode =
+                        _incrementCurrentEpisode(series.currentEpisode);
+                    await Context.instance.updateSeries(Series(
+                        id: series.id!,
+                        name: series.name,
+                        currentEpisode: _followingEpisode));
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.remove_circle_outline,
+                    color: Colors.red,
+                  ),
+                  onPressed: () async {
+                    int _previousEpisode =
+                        _decrementCurrentEpisode(series.currentEpisode);
+                    await Context.instance.updateSeries(Series(
+                        id: series.id!,
+                        name: series.name,
+                        currentEpisode: _previousEpisode));
+                  },
+                ),
               ],
             ),
-          ),
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: () async {
-                  int _followingEpisode =
-                      _incrementCurrentEpisode(series.currentEpisode);
-                  await Context.instance.updateSeries(Series(
-                      id: series.id!,
-                      name: series.name,
-                      currentEpisode: _followingEpisode));
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.remove),
-                onPressed: () async {
-                  int _previousEpisode =
-                      _decrementCurrentEpisode(series.currentEpisode);
-                  await Context.instance.updateSeries(Series(
-                      id: series.id!,
-                      name: series.name,
-                      currentEpisode: _previousEpisode));
-                },
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       );
 
   @override
