@@ -10,6 +10,7 @@ class EpisodePlus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Episode Plus',
       theme: ThemeData(
         // This is the theme of your application.
