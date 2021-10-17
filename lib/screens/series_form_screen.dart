@@ -44,18 +44,24 @@ class _SeriesFormState extends State<SeriesForm> {
         },
       );
 
+  bool _isInteger(String s) {
+    return int.tryParse(s) != null;
+  }
+
   Widget _currentEpisodeField() => TextFormField(
         validator: (String? inputValue) {
           if (inputValue == null || inputValue.isEmpty) {
             return 'Please enter Current Episode.';
           } else if (inputValue == '0') {
-            return 'Please enter an integer greater than zero.';
+            return 'Please enter a number greater than 0.';
+          } else if (_isInteger(inputValue) == false) {
+            return 'Please enter an integer value.';
           }
           return null;
         },
         onSaved: (String? inputValue) {
-          int parsedInputValue = int.tryParse(inputValue!)!;
-          _currentEpisode = parsedInputValue;
+          int _parsedInputValue = int.tryParse(inputValue!)!;
+          _currentEpisode = _parsedInputValue;
         },
       );
 
@@ -71,11 +77,10 @@ class _SeriesFormState extends State<SeriesForm> {
             Series(name: _name, currentEpisode: _currentEpisode),
           );
 
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Series Added Successfully!')));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('$_name Added!')));
 
           Navigator.pushReplacementNamed(context, ScreenRoutes.homeScreen);
-          //Navigator.pushNamed(context, ScreenRoutes.homeScreen);
         },
       );
 
