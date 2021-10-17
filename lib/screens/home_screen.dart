@@ -40,6 +40,60 @@ class HomeScreenList extends StatefulWidget {
 }
 
 class _HomeScreenListState extends State<HomeScreenList> {
+  int _incrementCurrentEpisode(int _currentEpisode) {
+    setState(() {
+      _currentEpisode++;
+    });
+    return _currentEpisode;
+  }
+
+  int _decrementCurrentEpisode(int _currentEpisode) {
+    setState(() {
+      --_currentEpisode;
+    });
+    return _currentEpisode;
+  }
+
+  Widget _listItem(Series series) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                Text(series.name),
+                Text('Current Episode: ${series.currentEpisode}')
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () async {
+                  int _followingEpisode =
+                      _incrementCurrentEpisode(series.currentEpisode);
+                  await Context.instance.updateSeries(Series(
+                      id: series.id!,
+                      name: series.name,
+                      currentEpisode: _followingEpisode));
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.remove),
+                onPressed: () async {
+                  int _previousEpisode =
+                      _decrementCurrentEpisode(series.currentEpisode);
+                  await Context.instance.updateSeries(Series(
+                      id: series.id!,
+                      name: series.name,
+                      currentEpisode: _previousEpisode));
+                },
+              ),
+            ],
+          ),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Series>>(
@@ -57,15 +111,12 @@ class _HomeScreenListState extends State<HomeScreenList> {
                 background: Container(
                   color: Colors.red,
                 ),
-                onDismissed: (direction) {
-                  Context.instance.deleteSeries(series.id!);
+                onDismissed: (direction) async {
+                  await Context.instance.deleteSeries(series.id!);
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('${series.name} deleted.')));
                 },
-                child: ListTile(
-                  title: Text(series.name),
-                  subtitle: Text('Current Episode: ${series.currentEpisode}'),
-                ),
+                child: _listItem(series),
               );
             }).toList(),
           );

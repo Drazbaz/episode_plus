@@ -55,4 +55,11 @@ class Context {
     return await db
         .delete(DatabaseTables.seriesTable, where: 'id = ?', whereArgs: [id]);
   }
+
+  // Update a Series from the database.
+  Future<int> updateSeries(Series series) async {
+    Database db = await instance.database;
+    return await db.update(DatabaseTables.seriesTable, series.toMap(),
+        where: "id = ?", whereArgs: [series.id]);
+  }
 }

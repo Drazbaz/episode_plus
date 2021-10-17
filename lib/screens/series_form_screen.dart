@@ -47,7 +47,7 @@ class _SeriesFormState extends State<SeriesForm> {
   Widget _currentEpisodeField() => TextFormField(
         validator: (String? inputValue) {
           if (inputValue == null || inputValue.isEmpty) {
-            return 'Please enter Current Series.';
+            return 'Please enter Current Episode.';
           } else if (inputValue == '0') {
             return 'Please enter an integer greater than zero.';
           }
