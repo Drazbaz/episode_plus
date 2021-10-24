@@ -14,7 +14,9 @@ class SeriesFormScreen extends StatelessWidget {
           title: const Text(ScreenTitles.seriesFormScreenTitle),
           automaticallyImplyLeading: false,
         ),
-        body: SeriesForm(key),
+        body: SingleChildScrollView(
+          child: SeriesForm(key),
+        ),
       ),
     );
   }
@@ -47,8 +49,8 @@ class _SeriesFormState extends State<SeriesForm> {
         },
       );
 
-  bool _isInteger(String s) {
-    return int.tryParse(s) != null;
+  bool _isInteger(String inputValue) {
+    return int.tryParse(inputValue) != null;
   }
 
   Widget _currentEpisodeField() => TextFormField(

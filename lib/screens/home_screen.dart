@@ -12,7 +12,9 @@ class HomeScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(ScreenTitles.homeScreenTitle),
+          title: const Text(
+            ScreenTitles.homeScreenTitle,
+          ),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -54,6 +56,24 @@ class _HomeScreenListState extends State<HomeScreenList> {
     return _currentEpisode;
   }
 
+  Widget _listText(String label, String value) => RichText(
+        text: TextSpan(
+          text: label,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+          children: [
+            TextSpan(
+              text: value,
+              style: const TextStyle(
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      );
+
   Widget _listItem(Series series) => Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -61,9 +81,10 @@ class _HomeScreenListState extends State<HomeScreenList> {
           children: [
             Expanded(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Series: ${series.name}'),
-                  Text('Current Episode: ${series.currentEpisode}'),
+                  _listText('Series: ', series.name),
+                  _listText('Episode: ', series.currentEpisode.toString()),
                 ],
               ),
             ),
